@@ -1,0 +1,20 @@
+/* Кастомные стили для daterangepicker */
+.daterangepicker .drp-selected {
+    display: none !important;
+}
+
+.daterangepicker .right {
+    display: none !important;
+}
+
+.daterangepicker .drp-calendar.left {
+    margin-right: 0 !important;
+}
+
+.daterangepicker .calendar-table {
+    width: auto !important;
+}
+
+.daterangepicker .calendar-time {
+    display: none !important;
+}

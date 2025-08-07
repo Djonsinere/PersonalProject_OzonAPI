@@ -1,0 +1,57 @@
+{% extends "personalproject/base.html" %}
+{% load django_tables2 %}
+
+{% block content %}
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+<div class="row">
+    <div class="col">
+        <h3>Данные водителя для создания поставок
+            <!--<button id="select-all-sales" class="btn btn-outline-primary btn-sm">Выбрать все</button>-->
+        </h3>
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            {% render_table DriversTable %}
+            
+        </div>
+    </div>
+    <div class="col">
+        <h3>Точка отгрузки
+            <!--<button id="select-all-sales" class="btn btn-outline-primary btn-sm">Выбрать все</button>-->
+        </h3>
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            {% render_table ShippingPointTable %}
+            
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <h3>Транспортные средства
+            <!--<button id="select-all-sales" class="btn btn-outline-primary btn-sm">Выбрать все</button>-->
+        </h3>
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            {% render_table VehiclesTable %}
+            
+        </div>
+    </div>
+    <div class="col">
+        <h3>Модели для справочника</h3>
+
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            {% render_table ProductTable %}
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <h3>Справочник кластеры
+            <!--<button id="select-all-sales" class="btn btn-outline-primary btn-sm">Выбрать все</button>-->
+        </h3>
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            {% render_table KlasterTable %}
+            
+        </div>
+    </div>
+    <div class='col'></div>
+</div>
+{% endblock %}

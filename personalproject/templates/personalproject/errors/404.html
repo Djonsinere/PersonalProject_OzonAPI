@@ -1,0 +1,8 @@
+{% extends "personalproject/base.html" %}
+{% block content %}
+  <div class="container mt-5 text-center">
+    <h1 class="text-warning">Страница не найдена :(</h1>
+    <p>Возможно, вы перешли по устаревшей ссылке или ввели неправильный адрес.</p>
+    <a href="{% url 'products' %}" class="btn btn-primary mt-3">На главную</a>
+  </div>
+{% endblock %}

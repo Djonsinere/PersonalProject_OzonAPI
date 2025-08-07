@@ -1,0 +1,9 @@
+{% extends "personalproject/base.html" %}
+{% load django_tables2 %}
+
+{% block content %}
+<div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+    {% render_table ReferenceTable %}
+    
+</div>
+{% endblock %}

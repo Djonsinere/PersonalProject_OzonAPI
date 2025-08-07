@@ -1,0 +1,88 @@
+version: '3.9'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: personalproject
+      
+    volumes:
+      - ./personalproject:/app/personalproject
+      - static_volume:/app/personalproject/staticfiles
+    env_file:
+      - ./personalproject/.env
+    depends_on:
+      - redis
+      - db
+    expose:
+      - 8000
+    working_dir: /app/personalproject
+    command: bash -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn personalproject.wsgi:application --bind 0.0.0.0:8000 --timeout 600"
+
+  redis:
+    image: redis:7.2
+    container_name: redis
+    volumes:
+      - ./redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery
+    working_dir: /app/personalproject
+    command: celery -A personalproject worker -l info
+    volumes:
+      - ./personalproject:/app/personalproject
+    env_file:
+      - ./personalproject/.env
+    depends_on:
+      - redis
+      - web
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_beat
+    working_dir: /app/personalproject
+    command: celery -A personalproject beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - ./personalproject:/app/personalproject
+    env_file:
+      - ./personalproject/.env
+    depends_on:
+      - redis
+      - web
+
+  nginx:
+    image: nginx:1.25
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/app/personalproject/staticfiles
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/www/certbot:/var/www/certbot
+    depends_on:
+      - web
+  db:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: personalproject_production
+      POSTGRES_USER: user_personalproject_prod
+      POSTGRES_PASSWORD: bixNuz-mattys-herqi3
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    expose:
+      - "5432"
+volumes:
+  static_volume:
+  postgres_data:
+  redis_data:

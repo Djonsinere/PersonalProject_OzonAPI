@@ -1,0 +1,78 @@
+{% extends "personalproject/base.html" %}
+{% load django_tables2 %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        
+        <div class="d-flex justify-content-center">
+            <div class="input-group mb-3" style="max-width: 400px;">
+                <!-- Поле для отображения выбранного диапазона -->
+                <input type="text" 
+                       id="date-range" 
+                       class="form-control"
+                       placeholder="Выберите период"
+                       value="{% if selected_since and selected_to %}{{ selected_since|date:'d.m.Y' }} - {{ selected_to|date:'d.m.Y' }}{% endif %}">
+                
+                <!-- Скрытые поля для хранения дат -->
+                <input type="hidden" 
+                       id="startDate" 
+                       value="{{ selected_since|default:'' }}">
+                <input type="hidden" 
+                       id="endDate" 
+                       value="{{ selected_to|default:'' }}">
+                
+                <button class="btn btn-success text-black" 
+                        type="button" 
+                        onclick="redirectToImportSales()">
+                        Подтвердить
+                </button>
+            </div>
+        </div>
+            <h3>Анализ продаж
+                <button id="select-all-sales" class="btn btn-outline-primary btn-sm">Выбрать все</button>
+            </h3>
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                {% render_table sales_table %}
+                
+            </div>
+		<!--<button id="confirm-sales" class="btn btn-success btn-sm mt-2">Подтвердить выбор</button>-->
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <h3>Требуют срочного пополнения 
+            <button id="select-all-urgent" class="btn btn-outline-primary btn-sm">Выбрать все</button>
+        </h3>
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            {% render_table urgent_table %}
+        </div>
+        <button id="confirm-urgent" class="btn btn-success btn-sm mt-2">Удалить</button>
+    </div>
+
+    <div class="col-md-6">
+        <h3>Плановые поставки 
+            <button id="select-all-normal" class="btn btn-outline-primary btn-sm">Выбрать все</button>
+        </h3>
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            {% render_table normal_table %}
+        </div>
+        <button id="confirm-normal" class="btn btn-success btn-sm mt-2">Добавить</button>
+    </div>
+</div>
+<div class="d-flex justify-content-center">
+    <form action="{% url 'products_stage_2' %}" method="get">
+        <button class = "btn btn-sm btn-primary" type="submit">Перейти к следующему этапу</button>
+    </form>
+</div>
+
+<script>
+    function redirectToImportSales() {
+        const start = document.getElementById('startDate').value;
+        const end = document.getElementById('endDate').value;
+        window.location.href = `/import-sales/?since=${start}&to=${end}`;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}personalproject{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+    {% load static %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/IMG_0304.PNG' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'css/custom_styels.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/daterangepicker-custom.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <!--<a class="navbar-brand" href="/home">personalproject</a> -->
+        <a class="navbar-brand" href="/products">
+            <img src="{% static 'images/logo.jpg' %}" alt="personalproject Logo" height="40">
+          </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключатель навигации">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'products' %}">Поставки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'reference' %}">Справочник</a> 
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'profile' %}">Личный кабинет</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'goods' %}">Товары</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'regions' %}">Регионы</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto d-flex flex-row gap-2">
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm" href="{% url 'logout' %}">Выйти</a>
+                      </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm me-2" href="{% url 'login' %}">Войти</a>
+                      </li>
+                      <!--<li class="nav-item">
+                        <a class="btn btn-outline-light btn-sm" href="{% url 'register' %}">Зарегистрироваться</a>
+                      </li>-->
+                    {% endif %}
+                </li>
+        
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Глобальный лоадер -->
+    <div id="global-loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1050; align-items: center; justify-content: center;">
+        <div class="spinner-border text-light" style="width: 5rem; height: 5rem;" role="status">
+          <span class="visually-hidden">Загрузка...</span>
+        </div>
+    </div>    
+
+    {% if messages %}
+<div style="position: fixed; top: 70px; right: 20px; z-index: 1050; width: 300px;">
+    {% for message in messages %}
+      <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+</div>
+{% endif %}
+      
+      
+
+    <div class="container-fluid"> 
+        {% block content %}{% endblock %} 
+    </div> 
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/script_for_checkboxes.js' %}"></script>
+    <script src="{% static 'js/script_csrf.js' %}"></script>
+    <script src="{% static 'js/daterangepicker-init.js' %}"></script>
+    <script src="{% static 'js/chart_for_goods.js' %}"></script>
+    <script src="{% static 'js/regions.js' %}"></script>
+    <script src="{% static 'js/loading.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

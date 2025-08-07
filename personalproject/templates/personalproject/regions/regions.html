@@ -1,0 +1,261 @@
+{% extends "personalproject/base.html" %}
+{% load django_tables2 %}
+
+{% block content %}
+<body class="bg-light">
+  <div class="container-fluid my-3">
+    <!-- Верхняя панель: Заголовок и кнопки -->
+    <div class="row mb-2">
+      <div class="col d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"> Регионы</h4>
+        <div>
+          <form action="{% url 'products' %}" method="get">
+            <button class="btn btn-primary me-2"  >Создать поставки</button>
+          </form>        
+        </div>
+      </div>
+    </div>
+
+    <!-- Заголовок для области с графиками -->
+    <div class="row">
+      <div class="col-12">
+        <h3 class="text-center">Динамика продаж по регионам</h3>
+      </div>
+    </div>
+
+    <!-- Основная сетка: Слева фильтры, справа область с графиками (прокручиваемая) -->
+    <div class="row mt-3">
+      <!-- Левая колонка: Фильтры -->
+      <div class="col-md-3">
+        <form method="GET" action="{% url 'regions_parametrs' %}">
+        <!-- Фильтры: Период -->
+        <div class="card mb-3">
+          <div class="card-header">Период</div>
+          <div class="card-body">
+         
+            <div class="mb-3">
+              <label for="startDate" class="form-label">Дата начала</label>
+              <input type="date" class="form-control mb-2" name="since" value="{{ request.GET.since }}">
+            </div>
+            <div class="mb-3">
+              <label for="endDate" class="form-label">Дата окончания</label>
+              <input type="date" class="form-control mb-2" name="to" value="{{ request.GET.to }}">
+            </div>
+          
+          </div>
+        </div>
+
+        <!-- Фильтры: Параметры (без поля "Модель") -->
+        <div class="card mb-2">
+          <div class="card-header">Параметры</div>
+          <div class="card-body">
+            <div class="mb-2">
+              <label for="title" class="form-label">Название</label>
+              <input type="text" class="form-control mb-2" name="name" placeholder="Введите название" value="{{ request.GET.name }}">
+            </div>
+            <div class="mb-3">
+              <label for="article" class="form-label">Артикул</label>
+              <input type="text" class="form-control mb-2" name="article" placeholder="Введите артикул" value="{{ request.GET.article }}">
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="card mb-3">
+          <div class="card-header">Выбор регионов</div>
+          <div class="table-responsive" style="max-height: 180px; overflow-y: auto;">
+            <!--<div class="card-body row row-cols-2">-->
+            <!-- Список регионов -->
+              <div class="form-check mb-2 col cluster-2">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="2" id="cluster2">
+                <label class="form-check-label" for="cluster2">Санкт-Петербург и СЗО</label>
+              </div>
+              <div class="form-check mb-2 col cluster-3">
+                  <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                         value="3" id="cluster3">
+                  <label class="form-check-label" for="cluster3">Урал</label>
+              </div>  
+              <div class="form-check mb-2 col cluster-7">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="7" id="cluster4">
+                <label class="form-check-label" for="cluster4">Дальний Восток</label>
+              </div>  
+              <div class="form-check mb-2 col cluster-12">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="12" id="cluster5">
+                <label class="form-check-label" for="cluster5">Калининград</label>
+              </div>  
+              <div class="form-check mb-2 col cluster-16">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="16" id="cluster6">
+                <label class="form-check-label" for="cluster6">Воронеж</label>
+              </div>  
+              <div class="form-check mb-2 col cluster-17">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="17" id="cluster7">
+                <label class="form-check-label" for="cluster7">Краснодар</label>
+              </div>
+              <div class="form-check mb-2 col cluster-144">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="144" id="cluster8">
+                <label class="form-check-label" for="cluster8">Тюмень</label>
+              </div>
+              <div class="form-check mb-2 col cluster-146">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="146" id="cluster8">
+                <label class="form-check-label" for="cluster8">Волгоград</label>
+              </div>
+              <div class="form-check mb-2 col cluster-147">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="147" id="cluster9">
+                <label class="form-check-label" for="cluster9">Ростов</label>
+              </div>
+              <div class="form-check mb-2 col cluster-148">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="148" id="cluster10">
+                <label class="form-check-label" for="cluster10">Уфа</label>
+              </div>
+              <div class="form-check mb-2 col cluster-149">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="149" id="cluster11">
+                <label class="form-check-label" for="cluster11">Казань</label>
+              </div>
+              <div class="form-check mb-2 col cluster-150">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="150" id="cluster12">
+                <label class="form-check-label" for="cluster12">Самара</label>
+              </div>
+              <div class="form-check mb-2 col cluster-151">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="151" id="cluster13">
+                <label class="form-check-label" for="cluster13">Новосибирск</label>
+              </div>
+              <div class="form-check mb-2 col cluster-152">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="152" id="cluster14">
+                <label class="form-check-label" for="cluster14">Омск</label>
+              </div>
+              <div class="form-check mb-2 col cluster-153">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="153" id="cluster17">
+                <label class="form-check-label" for="cluster17">Кавказ</label>
+              </div>
+              <div class="form-check mb-2 col cluster-154">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="154" id="cluster18">
+                <label class="form-check-label" for="cluster18">Москва, МО и Дальние регионы</label>
+              </div>
+              <div class="form-check mb-2 col cluster-155">
+                <input class="form-check-input cluster-checkbox" type="checkbox" name="clusters" 
+                       value="155" id="cluster19">
+                <label class="form-check-label" for="cluster19">Красноярск</label>
+              </div>
+
+            <!--</div>  -->
+          </div>
+          <div class="card-footer">
+            <input type="hidden" name="reg_filter" id="regFilterInput">
+            <button type="submit" class="btn btn-primary w-100">🔍 Подтвердить</button>
+          </div>
+        </div>
+      </form>
+      </div>
+      <!-- Графики -->
+      <div class="col-md-9">
+        <div class="table-responsive" style="max-height: 750px; overflow-y: auto;">
+            <div class="container-fluid">
+                <div class="row">  <!-- Основной ряд для сетки -->
+                    {% for chart in charts_data %}
+                    <div class="col-md-6 col-lg-4 mb-4">  <!-- 3 в ряд на больших экранах, 2 на средних -->
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header bg-light">
+                                {{ chart.region_name }}
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <div class="chart-wrapper flex-grow-1">
+                                    <canvas id="chart-{{ chart.region_id }}"></canvas>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white">
+                                <div class="row text-center">
+                                    <div class="col-6 border-end">
+                                        <small class="text-muted">Остаток</small>
+                                        <p class="mb-0 fw-bold">{{ chart.total_stock }}</p>  
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Хватит дней</small>
+                                        <p class="mb-0 fw-bold">{{ chart.days_end }}</p> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Таблица остатков и продаж расположена ниже области с графиками -->
+    <div class="row mt-3">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">Таблица остатков и продаж</div>
+          <div class="card-body p-0">
+            <div class="table-responsive" style="max-height: 750px; overflow-y: auto;">
+              <table class="table table-bordered table-hover table-sm text-center align-middle mb-0">
+                {%render_table  region_table%}
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    {% for chart in charts_data %}
+    new Chart(document.getElementById('chart-{{ chart.region_id }}'), {
+      type: 'line',
+      data: {
+        labels: {{ chart.labels|safe }},
+        datasets: [{
+          label: 'Продажи ({{ chart.region_name }})',
+          data: {{ chart.data|safe }},
+          borderColor: "rgba(54, 162, 235, 1)",
+          tension: 0.1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+    {% endfor %}
+  });
+</script>
+
+<style>
+  .chart-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  .chart-wrapper {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+</style>
+
+{% endblock %}

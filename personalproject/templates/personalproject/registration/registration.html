@@ -1,0 +1,51 @@
+{% extends 'personalproject/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-center mb-4">Регистрация</h3>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Username -->
+                        <div class="mb-3">
+                            {{ user_form.username.label_tag }}
+                            {{ user_form.username|add_class:"form-control" }}
+                        </div>
+
+                        <!-- Passwords -->
+                        <div class="mb-3">
+                            {{ user_form.password1.label_tag }}
+                            {{ user_form.password1|add_class:"form-control" }}
+                        </div>
+                        <div class="mb-3">
+                            {{ user_form.password2.label_tag }}
+                            {{ user_form.password2|add_class:"form-control" }}
+                        </div>
+
+                        <!-- Профиль -->
+                        <div class="mb-3">
+                            {{ profile_form.ozon_client_id.label_tag }}
+                            {{ profile_form.ozon_client_id|add_class:"form-control" }}
+                        </div>
+                        <div class="mb-3">
+                            {{ profile_form.ozon_api_key.label_tag }}
+                            {{ profile_form.ozon_api_key|add_class:"form-control" }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'login' %}" class="text-muted">Уже есть аккаунт? Войти</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

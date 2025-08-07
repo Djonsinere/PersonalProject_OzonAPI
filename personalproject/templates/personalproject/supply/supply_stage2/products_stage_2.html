@@ -1,0 +1,177 @@
+{% extends "personalproject/base.html" %}
+{% load django_tables2 %}
+
+{% block content %}
+
+<div class="container-fluid my-4">
+  <h1 class="mb-4">Сводка и управление поставками</h1>
+
+  <div class="row top-header">
+    <!-- Колонка 1: Сводка по поставкам -->
+    <div class="col-md-5 mb-4">
+      <h4>Сводка по поставкам</h4>
+      <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+        {% render_table total_supply_table %}
+      </div>
+    </div>
+
+    <!-- Колонка 2: Общая оценка -->
+    <div class="col-md-3 mb-4">
+      <h4>Общая оценка</h4>
+      <div style="font-size: 0.85rem;">
+        <div><strong>Общая себестоимость:</strong> {{ total_supply.total_cost }} </div>
+        <div><strong>Общая сумма реализации:</strong> {{ total_supply.total_sales_amount }} </div>
+        <div><strong>Количество товаров (SKU):</strong> {{ total_supply.quantity_oriducts_sku }} </div>
+        <div><strong>Количество единиц товара:</strong> {{ total_supply.number_units }} </div>
+        <div><strong>Общий объем:</strong> {{ total_supply.total_volume }} </div>
+        <div><strong>Общий вес:</strong> {{ total_supply.total_weight }}</div>
+        <div><strong>Количество регионов:</strong> {{ total_supply.quantity_regions }} </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Кнопки управления -->
+  <form method="post" action="{% url 'update_products_in_supply_table' %}" id="main-form">
+    {% csrf_token %}
+    <div class="mb-3">
+      <button type="submit" class="btn btn-primary btn-sm">Пересчитать</button>
+      <a class="btn btn-info btn-sm" id="start-supply-button" type="button" href="{% url 'create_supply' %}" >Создать</a>
+      <a class="btn btn-danger btn-sm" type="button" href="{% url 'products' %}" >Удалить</a>
+    </div>
+  </form>
+    <h2 class="mb-4">Управление поставками</h2>
+
+    {% for shipment in shipments_data %}
+      <div class="card mb-3">
+        <div class="card-header shipment-header">
+          <div class="row align-items-start">
+            <div class="col-md-3">
+              <p><strong>Название: Поставка</strong> {{ forloop.counter }}</p>
+              <p><strong>Точка отправки:</strong> {{ shipment.dispatch }}</p>
+              <p><strong>Регион:</strong> {{ shipment.region }}</p>
+              <p><strong>Склад размещения:</strong> {{ shipment.wirehouse }}</p>
+            </div>
+            <div class="col-md-3">
+              <p><strong>Вид поставки:</strong> {{ shipment.supplu_type }}</p>
+              <p><strong>Себестоимость:</strong> {{ shipment.cost }}</p>
+              <p><strong>Сумма реализации:</strong> {{ shipment.summrealiz }}</p>
+            </div>
+            <div class="col-md-3">
+              <p><strong>Количество (SKU):</strong> {{ shipment.quantity_sku }}</p>
+              <p><strong>Количество единиц:</strong> {{ shipment.quantity_units }}</p>
+              <p><strong>Вес (кг):</strong> {{ shipment.weight }}</p>
+              <p><strong>Объем:</strong> {{ shipment.volume }}</p>
+            </div>
+            <div class="col-md-3">
+              <p><strong>Паллет моно:</strong> {{ shipment.mono_pallets }}</p>
+              <p><strong>Паллет микс:</strong> {{ shipment.mix_pallets }}</p>
+              <p><strong>Коробов моно:</strong> {{ shipment.mix_boxes }}</p>
+            </div>
+            <div class="col-md-3">
+              <p>
+                <strong>Черновик:</strong> 
+                  <span class="text-info">{{ shipment.draft }}</span>
+              </p>
+              <p><strong>Поставка:</strong> 
+                <span class="text-info">{{ shipment.supply }}</span>
+              </p>
+            </div>
+            <div class="row mt-2">
+              <div class="col text-end">
+                <form method="post" action="{% url 'delete_shipment_by_klaster' %}" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="klaster_id" value="{{ shipment.klaster_id }}">
+                  <button class="btn btn-danger btn-sm" type="submit">Удалить</button>
+              </form>
+                <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShipment{{ forloop.counter }}">
+                  Открыть/Закрыть
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Вкладка карточки с таблицами -->
+        <div id="collapseShipment{{ forloop.counter }}" class="collapse">
+          <div class="collapsible-content p-3">
+            <div class="row">
+              <!-- Таблица: Товары в поставке -->
+              <div class="col-12 col-lg-6 mb-3">
+                <h5>Товары в поставке</h5>
+                <div class="table-responsive">
+
+                    {% render_table shipment.products_table %}
+
+                </div>
+              </div>
+           <!-- </form> ошибка в некорректно закрытой форме, которая покрывает только 1 кластер-->
+              <!-- Таблица: Грузоместа -->
+              <div class="col-12 col-lg-6 mb-3">
+                <h5>Грузоместа</h5>
+                <div class="table-responsive">
+                  {% render_table shipment.cargo_table %}
+                </div>
+              </div>
+            </div>
+            <!--<div class="shipment-actions">
+              <form method="post" action="{% url 'delete_shipment' %}" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="klaster_id" value="{{ shipment.klaster_id }}">
+                <button class="btn btn-danger btn-sm" type="submit">Удалить грузоместа</button>
+              </form>
+              
+              <form method="post" action="{% url 'restore_shipment' %}" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="klaster_id" value="{{ shipment.klaster_id }}">
+                <button class="btn btn-secondary btn-sm" type="submit">Вернуть грузоместа</button>
+              </form>
+            </div>-->
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+  <!--</form>-->
+
+  {% if deleted_urgent_by_klaster %}
+  <h4 class="mt-4">Удалённые поставки</h4>
+  {% for deleted in deleted_urgent_by_klaster %}
+    <div class="alert alert-warning d-flex justify-content-between align-items-center">
+      <div>
+        Кластер {{ deleted.klaster_id }} — Артикул: {{ deleted.offer_id }}
+      </div>
+      <form method="post" action="{% url 'restore_shipment_by_klaster' %}">
+        {% csrf_token %}
+        <input type="hidden" name="klaster_id" value="{{ deleted.klaster_id }}">
+        <button class="btn btn-sm btn-secondary">Вернуть</button>
+      </form>
+    </div>
+  {% endfor %}
+{% endif %}
+  <script>
+    document.getElementById('start-supply-button').addEventListener('click', function () {
+        const overlay = document.getElementById('global-loading-overlay');
+        if (overlay) {
+            overlay.style.display = 'flex';
+        }
+    
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-info alert-dismissible fade show';
+        alertDiv.style.position = 'fixed';
+        alertDiv.style.top = '70px';
+        alertDiv.style.right = '20px';
+        alertDiv.style.zIndex = '9999';
+        alertDiv.style.width = '350px';
+        alertDiv.setAttribute('role', 'alert');
+        alertDiv.innerHTML = `
+            <strong>Обработка заявки на поставку...</strong><br>
+            Обычно это занимает не более нескольких минут
+            (зависит от количества кластеров и товаров).
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        document.body.appendChild(alertDiv);
+  
+    });
+    </script>
+
+{% endblock %}

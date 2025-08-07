@@ -1,0 +1,15 @@
+{% extends "personalproject/base.html" %}
+
+{% block content %}
+<h1>Главная панель</h1>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Статистика</h5>
+                <p class="card-text">Общее количество товаров: {{ product_count }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
