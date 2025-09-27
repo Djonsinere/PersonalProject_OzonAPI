@@ -29,13 +29,13 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 #AUTH_USER_MODEL = 'personalproject.User'
 # Application definition
 
 INSTALLED_APPS = [
-    'personalproject_main.apps.PersonalprojectConfig',
+    #personalproject_main.apps.PersonalprojectConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'django_celery_beat',
     "widget_tweaks",
+    "personalproject_main"
 
     
 ]
@@ -152,8 +153,8 @@ LOGIN_REDIRECT_URL = 'products'
 LOGOUT_REDIRECT_URL = 'login'
 
 
-CELERY_BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 

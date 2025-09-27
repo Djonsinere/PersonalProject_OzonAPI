@@ -17,7 +17,12 @@ class UserProfile(models.Model):
         if self.data_initialization_error:
             return f"failed: {self.data_initialization_error}"
         return "pending"
-    
+    class Meta:
+        db_table = 'userprofile'
+        verbose_name = 'Водимые данные'
+        verbose_name_plural = 'Водимые данные'
+
+
     def __str__(self):
         return f"Профиль {self.user.username}"
 
@@ -34,7 +39,7 @@ class Input_data(models.Model):
     top_up_remaining_days = models.PositiveIntegerField(null=True, blank=True)  # Пополнять остаток дней
     supply_on = models.PositiveIntegerField(null=True, blank=True)  # Поставлять на дней
     class Meta:
-        db_table = 'personalproject_input_data'
+        db_table = 'input_data'
         verbose_name = 'Водимые данные'
         verbose_name_plural = 'Водимые данные'
 
@@ -76,7 +81,7 @@ class Product(models.Model):
     cost_price  = models.IntegerField(blank=True, null=True)# себестоимость
 
     class Meta:
-        db_table = 'personalproject_product'
+        db_table = 'product'
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
 
@@ -95,7 +100,7 @@ class Price(models.Model):
     currency_code = models.CharField(max_length=10, default='RUB')
 
     class Meta:
-        db_table = 'personalproject_prices'
+        db_table = 'prices'
         verbose_name = 'Цена'
         verbose_name_plural = 'Цены'
 
@@ -110,7 +115,7 @@ class Stock(models.Model):
     sku = models.IntegerField()
     klaster_id = models.IntegerField(verbose_name='ID кластера', null=True, blank=True, db_index=True)
     class Meta:
-        db_table = 'personalproject_stock'
+        db_table = 'stock'
         verbose_name = 'Складской остаток'
         verbose_name_plural = 'Складские остатки'
 
@@ -165,7 +170,7 @@ class Sale(models.Model):
     klaster_name = models.CharField(max_length=255, verbose_name='Название кластера', null=True, blank=True)
 
     class Meta:
-        db_table = 'personalproject_sales'
+        db_table = 'sales'
         verbose_name = 'Продажа'
         verbose_name_plural = 'Продажи'
 
@@ -179,7 +184,7 @@ class Warehouse(models.Model):
     klaster_id = models.IntegerField(verbose_name='ID кластера', null=True, blank=True)
     klaster_name = models.CharField(max_length=255, verbose_name='Название кластера', null=True, blank=True)
     class Meta:
-        db_table = 'personalproject_warehouses'
+        db_table = 'warehouses'
         verbose_name = 'Склады'
         verbose_name_plural = 'Склады'
 

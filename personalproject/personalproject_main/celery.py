@@ -2,7 +2,7 @@ import os
 from celery import Celery
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', os.getenv("DJANGO_SETTINGS_MODULE", "personalproject.settings"))
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', os.getenv("DJANGO_SETTINGS_MODULE", "personalproject_main.settings"))
 
 app = Celery("personalproject")
 app.config_from_object("django.conf:settings", namespace="CELERY")
