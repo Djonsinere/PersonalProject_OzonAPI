@@ -1,6 +1,3 @@
-# PersonalProject_OzonAPI
-
-## Example usage (local)
 
 
 # PersonalProject_OzonAPI
